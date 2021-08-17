@@ -8,14 +8,15 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://Keyur_Vastani:Keyur_Vastani@cluster0.rh3wt.mongodb.net/task-manager-api', {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true
-}, 
-// (error) => {
-//     if (error) {
-//         return console.log("unable to connect");
-//     }
-//     console.log("connection correctly");
-// }
+    useUnifiedTopology: true,
+    useFindAndModify: false
+},
+    // (error) => {
+    //     if (error) {
+    //         return console.log("unable to connect");
+    //     }
+    //     console.log("connection correctly");
+    // }
 )
 
 
@@ -99,7 +100,7 @@ mongoose.connect('mongodb+srv://Keyur_Vastani:Keyur_Vastani@cluster0.rh3wt.mongo
 //         required: true,
 
 //     },
-  
+
 // })
 
 
