@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 
 const userSchema = new mongoose.Schema(
@@ -46,17 +47,24 @@ const userSchema = new mongoose.Schema(
                 }
 
             }
-        }
+        },
+        tokens:[{
+            token:{
+                type:String,
+                required :true
+            }
+        }]
     }
 )
 
+// for login method
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })  //email:email
+  
     if (!user) {
-        throw new Error('unable to login')
+      throw new Error('unable to login')
     }
     const isMatch = await bcrypt.compare(password, user.password)
-
     if (!isMatch) {
         throw new Error('unable to login')
     }
@@ -65,11 +73,30 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 
 
+//for token generation
+userSchema.methods.generateAuthToken= async function(){
+    const user=this
+    const token= jwt.sign({_id:user._id.toString()},'thisismynewcourse')
+    user.tokens=user.tokens.concat({token}) //token:token
+    await user.save()
+    return token
+
+}
+
+
+userSchema.methods.toJSON =function(){
+    const user=this 
+    const userObject= user.toObject()
+    delete userObject.password
+    delete userObject.tokens
+   
+    return userObject
+}
 
 
 
 
-//meddleware concept
+// document meddleware concept
 //Hash the plaintext password before save
 userSchema.pre('save', async function (next) {
     const user = this                     //this is provide the access the data which is provide in the postman when user is created

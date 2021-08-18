@@ -10,6 +10,22 @@ const port = process.env.PORT || 3000
 
 
 
+
+//express middleware
+
+// app.use((req,res,next)=>{
+//     if(req.method==='GET'){
+//         res.send("you can't fatch data")
+//     }else{
+//         next()
+//     }      
+// })
+
+
+// app.use((req,res,next)=>{
+//         res.status(503 ).send("site is under mantainses")    
+// })
+
 //get the data from the client 
 app.use(express.json())
 app.use(userRouter) //register the router
@@ -38,9 +54,7 @@ app.listen(port, () => {
 
 })
 
-//decryption key set
-
-
+// //decryption key set-------------------------------------------------------
 // const bcrypt=require('bcryptjs')
 
 // const myFunction =async()=>{
@@ -54,3 +68,23 @@ app.listen(port, () => {
 // }
 
 // myFunction()
+
+
+// //jwt Token-------------------------------------
+// const jwt=require('jsonwebtoken')
+       
+// const myFunction=async()=>{
+//           //this is a create a token
+//      const token = jwt.sign({_id:'jwt123'} ,'thisismynewcourse',{expiresIn:'1 second'})
+//      console.log(token);
+
+
+//     // varify the token
+//         const data=    jwt.verify(token,'thisismynewcourse')
+//         console.log(data);
+// }
+
+// myFunction()
+
+
+

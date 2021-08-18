@@ -1,18 +1,20 @@
 const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
+const auth= require('../middleware/auth')
 
 
 
-//  1) for user post(put data) the data
+//  1) for user post(put data) the data (register)
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
     // console.log(req.body  );
     // res.send("testing perfectly work")
 
-    try {
+    try {      
         await user.save()
-        res.status(201).send(user)
+        const token= await user.generateAuthToken()
+        res.status(201).send({user,token})
     } catch (e) {
         res.status(400).send(e)
     }
@@ -29,31 +31,61 @@ router.post('/users', async (req, res) => {
 router.post('/users/login', async(req,res)=>{
     try{
         const user = await User.findByCredentials(req.body.email,req.body.password)
-        res.send(user)
+        const token= await user.generateAuthToken()
+        res.send( {user,token})
     }catch(e){
-        res.status(400).send(e)
+        res.status(400).send("so")
+    }
+
+})
+ 
+//     logout
+router.post('/users/logout',auth,async(req,res)=>{
+    try{
+            req.user.tokens= req.user.tokens.filter((item)=>item.token!==req.token )
+            await req.user.save()
+            res.send("You are Logout")
+    }catch(e){
+            res.status(500).send(e)
     }
 
 })
 
 
-// 2) get the user data
+// Logout All account
+router.post('/users/logoutAll',auth,async(req,res)=>{
+    try{
+        req.user.tokens=[]
+        await req.user.save()
+        res.send("your all account logout ")
 
-router.get('/users', async (req, res) => {
-
-    try {
-        const users = await User.find({})
-        res.status(201).send(users)
-    } catch (e) {
+    }catch(e){
         res.status(500).send(e)
     }
+})
+
+
+// 2) get the user data
+router.get('/users/me',auth, async (req, res) => {
+    res.status(200).send(req.user)
+})
+
+
+// router.get('/users',auth, async (req, res) => {
+
+//     try {
+//         const users = await User.find({})
+//         res.status(201).send(users)
+//     } catch (e) {
+//         res.status(500).send(e)
+//     }
 
     // User.find({}).then((users) => {
     //     res.send(users)
     // }).catch((e) => {
     //     res.status(500).send()
     // })
-})
+// })
 
 
 //  3) get data through id properties
