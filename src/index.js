@@ -2,8 +2,8 @@
 
 const express = require('express')
 require('./db/mongoose')                   //this is a connection of database
-const userRouter=require('./routers/user')
-const taskRouter=require('./routers/task')
+const userRouter = require('./routers/user')
+const taskRouter = require('./routers/task')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -72,7 +72,7 @@ app.listen(port, () => {
 
 // //jwt Token-------------------------------------
 // const jwt=require('jsonwebtoken')
-       
+
 // const myFunction=async()=>{
 //           //this is a create a token
 //      const token = jwt.sign({_id:'jwt123'} ,'thisismynewcourse',{expiresIn:'1 second'})
@@ -89,4 +89,30 @@ app.listen(port, () => {
 
 
 
+// // useing task we find user
+// const Task= require('./models/task')
 
+// const main = async()=>{
+//     const task=  await Task.findById('611defef740f1906e9a9ddc5') 
+//     await task.populate('owner').execPopulate()  //find the user which is associate with this task
+//     console.log(task.owner);  
+
+// }
+// main()
+
+
+
+//using the user we find the task
+// const User = require('./models/user')
+// const main = async () => {
+//     const user = await User.findById('611ded308c10080540ee69a8')
+//     await user.populate('tasks').execPopulate()
+//     console.log(user.tasks);
+// }
+// main()
+
+
+
+
+
+ 
